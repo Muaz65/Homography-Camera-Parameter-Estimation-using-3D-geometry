@@ -4,6 +4,7 @@ import cv2 as cv
 from util.rotation_util import RotationUtil
 from util.projective_camera import ProjectiveCamera
 
+
 class SyntheticUtil:
     @staticmethod
     def camera_to_edge_image(camera_data,
@@ -27,7 +28,7 @@ class SyntheticUtil:
         camera = ProjectiveCamera(fl, u, v, cc, rod_rot)
         im = np.zeros((im_h, im_w, 3), dtype=np.uint8)
         n = model_line_segment.shape[0]
-        color = (255,255,255)
+        color = (255, 255, 255)
         for i in range(n):
             idx1, idx2 = model_line_segment[i][0], model_line_segment[i][1]
             p1, p2 = model_points[idx1], model_points[idx2]
@@ -52,7 +53,8 @@ class SyntheticUtil:
 
         _, binary_im = cv.threshold(img, 10, 255, cv.THRESH_BINARY_INV)
 
-        dist_im = cv.distanceTransform(binary_im, cv.DIST_L2, cv.DIST_MASK_PRECISE)
+        dist_im = cv.distanceTransform(
+            binary_im, cv.DIST_L2, cv.DIST_MASK_PRECISE)
         return dist_im
 
     @staticmethod
@@ -60,7 +62,8 @@ class SyntheticUtil:
         warp = np.eye(3, dtype=np.float32)
         criteria = (cv.TERM_CRITERIA_EPS | cv.TERM_CRITERIA_COUNT, 50, 0.001)
         try:
-            _, warp = cv.findTransformECC(im_src, im_dst, warp, cv.MOTION_HOMOGRAPHY, criteria)
+            _, warp = cv.findTransformECC(
+                im_src, im_dst, warp, cv.MOTION_HOMOGRAPHY, criteria)
         except:
             print('Warning: find transform failed. Set warp as identity')
         return warp
@@ -113,6 +116,52 @@ class SyntheticUtil:
         return cameras
 
     @staticmethod
+    def genrateSingleImage(ccSTD, ccMin, ccMax,
+                           fl,
+                           rot1,
+                           rot2, rot3,
+                           u, v):
+        camera_num = 1
+        """
+        Input: PTZ camera base information
+        Output: randomly sampled camera parameters
+        :param cc_statistics:
+        :param fl_statistics:
+        :param roll_statistics:
+        :param pan_range:
+        :param tilt_range:
+        :param u:
+        :param v:
+        :param camera_num:
+        :return: N * 9 cameras
+        """
+
+        # generate random values from the distribution
+        camera_centers = [[ccMax, ccMin, ccSTD]]
+
+        focal_lengths = fl
+
+        # rolls = roll
+        # pans = pan
+        # tilts = tilt
+
+        # print("pan", pan)
+        cameras = np.zeros((camera_num, 9))
+        for i in range(camera_num):
+            # base_rotation = RotationUtil.rotate_y_axis(0) @ RotationUtil.rotate_x_axis(rolls) @\
+            #     RotationUtil.rotate_x_axis(-90)
+            # pan_tilt_rotation = RotationUtil.pan_y_tilt_x(pans, tilts)
+            # rotation = pan_tilt_rotation @ base_rotation
+            # rot_vec, _ = cv.Rodrigues(rotation)
+
+            # print(rot_vec)
+            cameras[i][0], cameras[i][1] = u, v
+            cameras[i][2] = focal_lengths
+            cameras[i][3], cameras[i][4], cameras[i][5] = rot1, rot2, rot3
+            cameras[i][6], cameras[i][7], cameras[i][8] = camera_centers[i][0], camera_centers[i][1], camera_centers[i][2]
+        return cameras
+
+    @staticmethod
     def sample_positive_pair(pp, cc, base_roll, pan, tilt, fl,
                              pan_std, tilt_std, fl_std):
         """
@@ -145,7 +194,7 @@ class SyntheticUtil:
         camera[2] = fl
 
         base_rotation = RotationUtil.rotate_y_axis(0) @ RotationUtil.rotate_y_axis(base_roll) @\
-                        RotationUtil.rotate_x_axis(-90)
+            RotationUtil.rotate_x_axis(-90)
         pan_tilt_rotation = RotationUtil.pan_y_tilt_x(pan, tilt)
         rotation = pan_tilt_rotation @ base_rotation
         rot_vec = RotationUtil.rotation_matrix_to_Rodrigues(rotation)
@@ -156,7 +205,6 @@ class SyntheticUtil:
     @staticmethod
     def generate_database_images(pivot_cameras, positive_cameras,
                                  model_points, model_line_segment):
-
         """
         Default size 180 x 320 (h x w)
         Generate database image for siamese network training
@@ -174,13 +222,14 @@ class SyntheticUtil:
         pivot_images = np.zeros((n, 1, im_h, im_w), dtype=np.uint8)
         positive_images = np.zeros((n, 1, im_h, im_w), dtype=np.uint8)
 
-
         for i in range(n):
-            piv_cam = pivot_cameras[i,:]
-            pos_cam = positive_cameras[i,:]
+            piv_cam = pivot_cameras[i, :]
+            pos_cam = positive_cameras[i, :]
 
-            piv_im = SyntheticUtil.camera_to_edge_image(piv_cam, model_points, model_line_segment, 720, 1280, 4)
-            pos_im = SyntheticUtil.camera_to_edge_image(pos_cam, model_points, model_line_segment, 720, 1280, 4)
+            piv_im = SyntheticUtil.camera_to_edge_image(
+                piv_cam, model_points, model_line_segment, 720, 1280, 4)
+            pos_im = SyntheticUtil.camera_to_edge_image(
+                pos_cam, model_points, model_line_segment, 720, 1280, 4)
 
             # to a smaller image
             piv_im = cv.resize(piv_im, (im_w, im_h))
@@ -190,10 +239,11 @@ class SyntheticUtil:
             piv_im = cv.cvtColor(piv_im, cv.COLOR_BGR2GRAY)
             pos_im = cv.cvtColor(pos_im, cv.COLOR_RGB2GRAY)
 
-            pivot_images[i, 0,:,:] = piv_im
-            positive_images[i, 0, :,:] = pos_im
+            pivot_images[i, 0, :, :] = piv_im
+            positive_images[i, 0, :, :] = pos_im
 
         return (pivot_images, positive_images)
+
 
 def ut_camera_to_edge_image():
     import scipy.io as sio
@@ -205,10 +255,12 @@ def ut_camera_to_edge_image():
     print(data.keys())
     model_points = data['points']
     model_line_index = data['line_segment_index']
-    im = SyntheticUtil.camera_to_edge_image(camera_data, model_points, model_line_index, 720, 1280, line_width=4)
+    im = SyntheticUtil.camera_to_edge_image(
+        camera_data, model_points, model_line_index, 720, 1280, line_width=4)
     #im = cv.cvtColor(im, cv.COLOR_RGB2GRAY)
-    #print(im.shape)
+    # print(im.shape)
     #cv.imwrite('debug_train_16.jpg', im)
+
 
 def ut_generate_ptz_cameras():
     """
@@ -248,11 +300,13 @@ def ut_generate_ptz_cameras():
     for i in range(num_camera):
         cam = cameras[i]
         print(cam[0:3])
-        im = SyntheticUtil.camera_to_edge_image(cam, model_points, model_line_index, 720, 1280, line_width=4)
+        im = SyntheticUtil.camera_to_edge_image(
+            cam, model_points, model_line_index, 720, 1280, line_width=4)
         print(im.shape)
         cv.imshow('image from camera', im)
         cv.waitKey(1000)
     cv.destroyAllWindows()
+
 
 def ut_sample_positive_pair():
     """
@@ -279,14 +333,13 @@ def ut_sample_positive_pair():
     camera[2] = fl
 
     base_rotation = RotationUtil.rotate_y_axis(0) @ \
-                    RotationUtil.rotate_z_axis(base_roll) @ \
-                    RotationUtil.rotate_x_axis(-90)
+        RotationUtil.rotate_z_axis(base_roll) @ \
+        RotationUtil.rotate_x_axis(-90)
     pan_tilt_rotation = RotationUtil.pan_y_tilt_x(pan, tilt)
     rotation = pan_tilt_rotation @ base_rotation
     rot_vec, _ = cv.Rodrigues(rotation)
     camera[3: 6] = rot_vec.squeeze()
     camera[6: 9] = cc
-
 
     pivot = camera
 
@@ -298,11 +351,14 @@ def ut_sample_positive_pair():
     model_points = data['points']
     model_line_index = data['line_segment_index']
 
-    im1 = SyntheticUtil.camera_to_edge_image(pivot, model_points, model_line_index, 720, 1280)
-    im2 = SyntheticUtil.camera_to_edge_image(positive, model_points, model_line_index, 720, 1280)
+    im1 = SyntheticUtil.camera_to_edge_image(
+        pivot, model_points, model_line_index, 720, 1280)
+    im2 = SyntheticUtil.camera_to_edge_image(
+        positive, model_points, model_line_index, 720, 1280)
     cv.imshow("pivot", im1)
     cv.imshow("positive", im2)
     cv.waitKey(5000)
+
 
 def ut_generate_database_images():
     import scipy.io as sio
@@ -312,7 +368,7 @@ def ut_generate_database_images():
 
     n = 10000
     pivot_cameras = pivot_cameras[0:n, :]
-    positive_cameras = positive_cameras[0:n,:]
+    positive_cameras = positive_cameras[0:n, :]
 
     data = sio.loadmat('../../data/worldcup2014.mat')
     print(data.keys())
@@ -320,12 +376,13 @@ def ut_generate_database_images():
     model_line_index = data['line_segment_index']
 
     pivot_images, positive_images = SyntheticUtil.generate_database_images(pivot_cameras, positive_cameras,
-                                                             model_points, model_line_index)
+                                                                           model_points, model_line_index)
 
     #print('{} {}'.format(pivot_images.shape, positive_images.shape))
-    sio.savemat('train_data_10k.mat', {'pivot_images':pivot_images,
-                                      'positive_images':positive_images,
-                                       'cameras':pivot_cameras})
+    sio.savemat('train_data_10k.mat', {'pivot_images': pivot_images,
+                                       'positive_images': positive_images,
+                                       'cameras': pivot_cameras})
+
 
 def ut_distance_transform():
     im = cv.imread('../../data/16_edge_image.jpg')
@@ -338,8 +395,8 @@ def ut_distance_transform():
 
 
 if __name__ == '__main__':
-    #ut_camera_to_edge_image()
-    #ut_generate_ptz_cameras()
-    #ut_sample_positive_pair()
+    # ut_camera_to_edge_image()
+    # ut_generate_ptz_cameras()
+    # ut_sample_positive_pair()
     ut_generate_database_images()
-    #ut_distance_transform()
+    # ut_distance_transform()
