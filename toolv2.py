@@ -20,12 +20,16 @@ from util.projective_camera import ProjectiveCamera
 
 
 data = sio.loadmat('data/TranslationData.mat')
+<<<<<<< HEAD
 
 # print(data.keys() )
+=======
+>>>>>>> 4d0ac83e4ca3a25f03653f47a581e5f8c20c3b28
 model_points = data['points']
 model_line_index = data['line_segment_index']
 
 
+<<<<<<< HEAD
 # cameraCenterMin =
 # cameraCenterMax =
 # cameraCenterStd =
@@ -49,6 +53,16 @@ values = {
     "Cam-Mid-MAX": cmax, #5.36220940e+01,#.13125884e+01,  #50.4685941
     "Cam-Mid-MIN": cmin, #-2.24819100e+01,#-4.68165975e+01,#-37.93388586,
     "Cam-Mid-STD": cstd #1.66194793e+01#1.76399662e+01#21.1104387 ,
+=======
+values = {
+    "Rot1": 1.781542,
+    "Rot2": -0.425225,
+    "Rot3": 0.3268195,
+    "FocalLength": 2931.8048,
+    "Cam-Mid-STD": 26.2208,
+    "Cam-Mid-MIN": -37.2913,
+    "Cam-Mid-MAX": 53.0794
+>>>>>>> 4d0ac83e4ca3a25f03653f47a581e5f8c20c3b28
 }
 
 
@@ -58,6 +72,7 @@ class MainApplication():
         self.master.title("Synthetic Image Visualization")
         self.master.geometry("1400x920")
 
+<<<<<<< HEAD
         # self.plus = Button(root, text='+', bd='5',
         #                    command=root.destroy)
         # self.plus.pack(side='top')
@@ -71,6 +86,12 @@ class MainApplication():
 
         self.CurrentChangeValue =1
 
+=======
+        # variabels
+        self.CurrentChangeValue = 1
+
+        # HeaderFooter
+>>>>>>> 4d0ac83e4ca3a25f03653f47a581e5f8c20c3b28
         self.Header = Label(root, text="Parameters", font=("Courier", 35))
         self.Header.place(x=320, y=1, anchor=NW)
 
@@ -78,6 +99,10 @@ class MainApplication():
             root, text=" © Copyright OMNO AI All Rights Reserved", font=("Courier", 10))
         self.Footer.place(x=580, y=900, anchor=NW)
 
+<<<<<<< HEAD
+=======
+        # Pan Cofiguration
+>>>>>>> 4d0ac83e4ca3a25f03653f47a581e5f8c20c3b28
         self.pan_plus = Button(root, text='+', bd='5',
                                command=lambda: self.incrementString(self.pan_midLabel))
         self.pan_plus.pack(side='top')
@@ -91,7 +116,11 @@ class MainApplication():
         self.pan_minus.pack(side='top')
         self.pan_minus.place(x=240, y=40, anchor=NW)
 
+<<<<<<< HEAD
         ###
+=======
+        # Tilt Cofiguration
+>>>>>>> 4d0ac83e4ca3a25f03653f47a581e5f8c20c3b28
         baseX = 300
 
         self.tilt_plus = Button(root, text='+', bd='5',
@@ -107,7 +136,11 @@ class MainApplication():
         self.tilt_minus.pack(side='top')
         self.tilt_minus.place(x=baseX + 210, y=40, anchor=NW)
 
+<<<<<<< HEAD
         ###
+=======
+        # Roll Cofiguration
+>>>>>>> 4d0ac83e4ca3a25f03653f47a581e5f8c20c3b28
         baseX = 580
         self.roll_plus = Button(root, text='+', bd='5',
                                 command=lambda: self.incrementString(self.roll_midLabel))
@@ -122,10 +155,16 @@ class MainApplication():
         self.roll_minus.pack(side='top')
         self.roll_minus.place(x=baseX + 210, y=40, anchor=NW)
 
+<<<<<<< HEAD
         #############
 
         ############
 
+=======
+        ### Second Row ###
+
+        # Cam-Center STD Cofiguration
+>>>>>>> 4d0ac83e4ca3a25f03653f47a581e5f8c20c3b28
         self.camSTD_plus = Button(root, text='+', bd='5',
                                   command=lambda: self.incrementString(self.camSTD_midLabel))
         self.camSTD_plus.pack(side='top')
@@ -140,8 +179,12 @@ class MainApplication():
         self.camSTD_minus.pack(side='top')
         self.camSTD_minus.place(x=240, y=70, anchor=NW)
 
+<<<<<<< HEAD
         ###
 
+=======
+        # Cam-Center Min Cofiguration
+>>>>>>> 4d0ac83e4ca3a25f03653f47a581e5f8c20c3b28
         baseX = 300
 
         self.camMIN_plus = Button(root, text='+', bd='5',
@@ -158,7 +201,11 @@ class MainApplication():
         self.camMIN_minus.pack(side='top')
         self.camMIN_minus.place(x=baseX + 210, y=70, anchor=NW)
 
+<<<<<<< HEAD
         ###
+=======
+        # Cam-Center Max Cofiguration
+>>>>>>> 4d0ac83e4ca3a25f03653f47a581e5f8c20c3b28
         baseX = 580
 
         self.camMax_plus = Button(root, text='+', bd='5',
@@ -175,8 +222,14 @@ class MainApplication():
         self.camMax_minus.pack(side='top')
         self.camMax_minus.place(x=baseX + 210, y=70, anchor=NW)
 
+<<<<<<< HEAD
         ###
 
+=======
+        ### Third Row ###
+
+        # Focal Length Cofiguration
+>>>>>>> 4d0ac83e4ca3a25f03653f47a581e5f8c20c3b28
         baseX = 300
 
         self.focalLength_plus = Button(root, text='+', bd='5',
@@ -195,6 +248,7 @@ class MainApplication():
 
         #################
 
+<<<<<<< HEAD
         self.b1 = Button(root, text="Load Image",
                          command=self.loadImageFromFileBrowser, height=1, width=18, bg="yellow")
         self.b1.place(x= 950, y=70, anchor=NW)
@@ -207,22 +261,43 @@ class MainApplication():
         self.CurrentUpdateValueEntry = Entry(
             root, textvariable=self.ChangeVar)
         # height=2, width=30, bg="yellow")
+=======
+        # Load Image Button
+        self.b1 = Button(root, text="Load Image",
+                         command=self.loadImageFromFileBrowser, height=1, width=18, bg="yellow")
+        self.b1.place(x=950, y=70, anchor=NW)
+
+        # Update Value Cofiguration
+        self.ChangeVar = tk.StringVar()
+        self.ChangeVar.set(self.CurrentChangeValue)
+        self.CurrentUpdateValueEntry = Entry(
+            root, textvariable=self.ChangeVar)
+>>>>>>> 4d0ac83e4ca3a25f03653f47a581e5f8c20c3b28
         self.CurrentUpdateValueEntry.place(x=950, y=40, anchor=NW)
 
         self.UpdateValue = Button(root, text="Update Change Val",
                                   command=self.UpdateChangeValue, height=1, width=15, bg="yellow")
         self.UpdateValue.place(x=1170, y=40, anchor=NW)
 
+<<<<<<< HEAD
+=======
+        # Image View
+>>>>>>> 4d0ac83e4ca3a25f03653f47a581e5f8c20c3b28
         self.image = ImageTk.PhotoImage(Image.open('./temp.jpg'))
         self.imagePath = "./temp.jpg"
         self.mesh = ImageTk.PhotoImage(Image.open('./temp.jpg'))
         self.ImagePanel = Label(image=self.image)
         self.ImagePanel.place(x=60, y=150, anchor=NW)
 
+<<<<<<< HEAD
+=======
+        # Quit button Cofiguration
+>>>>>>> 4d0ac83e4ca3a25f03653f47a581e5f8c20c3b28
         self.b2 = Button(root, text="Quit",
                          command=root.destroy, height=1, width=15, bg="green")
         self.b2.place(x=1170, y=70, anchor=NW)
 
+<<<<<<< HEAD
     def decrementString(self, label):
 
         currentString = label['text']
@@ -244,18 +319,33 @@ class MainApplication():
         elif (name.find('Focal') != -1):
 
             number -= (self.CurrentChangeValue * 10 )
+=======
+    #######Functions########
+
+    def decrementString(self, label):
+
+        currentString = label['text']
+
+        name, number = currentString.split("=")
+        number = float(number)
+        number -= self.CurrentChangeValue
+>>>>>>> 4d0ac83e4ca3a25f03653f47a581e5f8c20c3b28
 
         values[name] = number
 
         label['text'] = name + "= " + str(number)
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> 4d0ac83e4ca3a25f03653f47a581e5f8c20c3b28
         self.Project()
 
     def incrementString(self, label):
 
         currentString = label['text']
+<<<<<<< HEAD
         # print(self.pan_midLabel['text'])
 
         name, number = currentString.split("=")
@@ -278,6 +368,12 @@ class MainApplication():
 
 
 
+=======
+
+        name, number = currentString.split("=")
+        number = float(number)
+        number += self.CurrentChangeValue
+>>>>>>> 4d0ac83e4ca3a25f03653f47a581e5f8c20c3b28
 
         values[name] = number
 
@@ -287,7 +383,10 @@ class MainApplication():
     def UpdateChangeValue(self):
         updatedValue = float(self.ChangeVar.get())
         self.CurrentChangeValue = updatedValue
+<<<<<<< HEAD
         print("currennt value of chnage variable is ", self.CurrentChangeValue)
+=======
+>>>>>>> 4d0ac83e4ca3a25f03653f47a581e5f8c20c3b28
 
     def loadImageFromFileBrowser(self):
         baseImagePath = filedialog.askopenfilename(
@@ -296,6 +395,10 @@ class MainApplication():
         img = cv2.imread(baseImagePath)
         img = cv2.resize(img, (1280, 720))
         cv2.imwrite(baseImagePath, img)
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4d0ac83e4ca3a25f03653f47a581e5f8c20c3b28
         self.image = ImageTk.PhotoImage(Image.open(baseImagePath))
         self.imagePath = baseImagePath
         self.ImagePanel = Label(image=self.image)
@@ -307,6 +410,7 @@ class MainApplication():
         self.ImagePanel = Label(image=self.image)
         self.ImagePanel.place(x=60, y=150, anchor=NW)
 
+<<<<<<< HEAD
         # data['cc_mean'] lef entry control cam position on line horizontally
         # cc_mean = [[self.Tx.get(), self.Ty.get(),  self.Tz.get()]]
         # cc_std = [[0.0, 0.0, 0.0]]  # data['cc_std']
@@ -325,6 +429,8 @@ class MainApplication():
         # tilt_range = [self.tilt.get(), self.tilt.get()]  # [-15.0, -5.0]
         num_camera = 1
 
+=======
+>>>>>>> 4d0ac83e4ca3a25f03653f47a581e5f8c20c3b28
         retrieved_camera_data = SyntheticUtil.genrateSingleImage(values['Cam-Mid-STD'], values['Cam-Mid-MIN'], values['Cam-Mid-MAX'],
                                                                  values['FocalLength'],
                                                                  values['Rot1'],
